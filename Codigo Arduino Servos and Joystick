@@ -1,0 +1,39 @@
+/*Control de dos potenciómetros con un joystick. Ángulo de los servos proporcional al
+ * desplazamiento de la palanca. Cuando ésta se encuentra en el centro, el ángulo de
+ * ambos servos será 90º.
+ */
+
+#include<Servo.h>
+
+Servo servo1;                   // Crear un objeto tipo Servo llamado servo1
+Servo servo2;                   // Crear un objeto tipo Servo llamado servo2
+int EjeX = 1;                     // Conexión analógica A1 para el eje X
+int EjeY = 2;                     // Conexión analógica A2 para el eje Y
+int boton = 4;                    // Conexión del botón de lal palanca al pin digital 4
+
+void setup() 
+{
+servo1.attach(2);               // Conexión servo1 al pin 5 para eje X
+servo2.attach(3);               // Conexión servo2 al pin 6 para eje Y
+pinMode( boton, INPUT_PULLUP) ; // Conexión botón joystick al pin 4
+}
+
+void loop() 
+{
+int x = analogRead(EjeX);              //Lectura de posición palanca eje x entre 0 y 1023
+int xmapped = map(x,0,1023,0,90);   //Mapeado de posición x entre 30 y 150º
+servo1.write(xmapped);               //Movimiento servo1
+delay(5);
+
+int y = analogRead(EjeY);              //Lectura de posición palanca eje y entre 0 y 1023
+int ymapped = map(y,0,1023,0,90);   //Mapeado de posición y entre 30 y 150ºa
+servo2.write(ymapped);               //Movimiento servo2
+delay(5);
+
+if ( ! digitalRead(boton))     //Al pulsar el joystick, centramos los dos servosz
+     {
+     delay(20);
+     servo1.write(65);
+     servo2.write(98);
+}
+}
